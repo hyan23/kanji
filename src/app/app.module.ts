@@ -14,12 +14,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ForgotWordListComponent } from './forgot-word-list/forgot-word-list.component';
 import { TargetWordListComponent } from './target-word-list/target-word-list.component';
+import { ScratchCardComponent } from './scratch-card/scratch-card.component';
+import { WordCardComponent } from './word-card/word-card.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ForgotWordListComponent,
-    TargetWordListComponent
+    TargetWordListComponent,
+    ScratchCardComponent,
+    WordCardComponent
   ],
   imports: [
     BrowserModule,

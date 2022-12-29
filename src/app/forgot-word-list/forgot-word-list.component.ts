@@ -18,7 +18,10 @@ export class ForgotWordListComponent {
 
   wordList: string[][] = [];
 
+
+
   copy() {
+
     let s = '';
     for (let w of this.wordList) {
       s += w[0] + ' ' + w[1] + '\n';

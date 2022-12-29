@@ -6,43 +6,65 @@
 
   </mat-tab>
   <mat-tab label="测验">
-
-
-    <div style="height: 100%;padding: 20px;" fxLayout="column" fxLayoutGap="2%" fxLayoutAlign="center center">
-
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
-        模式：
-        <mat-button-toggle-group #group="matButtonToggleGroup">
-          <mat-button-toggle checked value="list">列表</mat-button-toggle>
-        </mat-button-toggle-group>
-        <button [disabled]="group.value!=='list'" mat-raised-button (click)="target.shuffle();cli()">洗牌</button>
-      </div>
-
-      <div fxFlex="1 1 auto" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center center">
-        <div id="kanji" #kanji></div>
-
-        <!-- 标记正确 -->
-        <!--
-    背的过程中标记不认识的
-    用户输入单词列表
-    随机模式移除，增加原顺序
-    单词列表支持多种分隔符，自定义分隔符
-    输入列表只是一对多关系，用于支持多音字
-    自动获取单词释义
-    语音识别添加单词
-  -->
-
-        <div id="container" (click)="over($event)">
-          <div id="shield" [style.display]="hide?'block':'none'"></div>
-          <div id="pron" #pron></div>
-        </div>
-      </div>
-
-      <div fxLayout="row" fxLayoutGap="10px">
-        <button mat-raised-button (click)="dontknow()">不认识</button>
-        <button mat-raised-button (click)="cli()">下一个</button>
-      </div>
+    <div class="example-loading-shade" *ngIf="this.target.deck.length==0">
+      <p style="margin: auto;color: crimson;font-size: 24px;">请先导入单词!</p>
     </div>
+    <mat-tab-group style="height: 100%;" animationDuration="200" color="decent" preserveContent="true">
+      <mat-tab label="读">
+
+        <div style="height: 100%;padding: 20px;" fxLayout="column" fxLayoutGap="2%" fxLayoutAlign="center center">
+
+          <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+            模式：
+            <mat-button-toggle-group #group="matButtonToggleGroup">
+              <mat-button-toggle checked value="list">列表</mat-button-toggle>
+            </mat-button-toggle-group>
+            <button [disabled]="group.value!=='list'" mat-raised-button (click)="target.shuffle();cli()">洗牌</button>
+          </div>
+
+          <div fxFlex="1 1 auto" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center center">
+            <app-word-card #wc1></app-word-card>
+
+            <!-- 标记正确 -->
+            <!--
+      背的过程中标记不认识的
+      用户输入单词列表
+      随机模式移除，增加原顺序
+      单词列表支持多种分隔符，自定义分隔符
+      输入列表只是一对多关系，用于支持多音字
+      自动获取单词释义
+      语音识别添加单词
+    -->
+            <app-scratch-card #card1></app-scratch-card>
+          </div>
+
+          <div fxLayout="row" fxLayoutGap="10px">
+            <button mat-raised-button (click)="dontknow()">不认识</button>
+            <button mat-raised-button (click)="cli()">下一个</button>
+          </div>
+        </div>
+
+
+
+      </mat-tab>
+
+      <mat-tab label="听">
+        <div style="height: 100%;" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center center">
+          <button mat-raised-button (click)="target.shuffle();">洗牌</button>
+
+          <div fxFlex="1 1 auto">
+            <app-word-card #wc2></app-word-card>
+            <app-scratch-card #card2></app-scratch-card>
+          </div>
+          <div fxLayout="row" fxLayoutGap="10px">
+            <button mat-raised-button (click)="dontknow()">不认识</button>
+            <button mat-raised-button (click)="relisten()">重听</button>
+            <button mat-raised-button (click)="next()">下一个</button>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+
 
 
   </mat-tab>

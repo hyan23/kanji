@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { ForgotWordListComponent } from './forgot-word-list/forgot-word-list.component';
+import { ScratchCardComponent } from './scratch-card/scratch-card.component';
 import { TargetWordListComponent } from './target-word-list/target-word-list.component';
 
 
@@ -11,12 +12,13 @@ import { TargetWordListComponent } from './target-word-list/target-word-list.com
 })
 export class AppComponent implements AfterViewInit {
   title = 'kanji';
-  @ViewChild('kanji') kanji: ElementRef;
-  @ViewChild('pron') pron: ElementRef;
-
   @ViewChild('group') group: MatButtonToggleGroup;
   @ViewChild('target') target: TargetWordListComponent;
   @ViewChild('forgot') forgot: ForgotWordListComponent;
+  @ViewChild('card1') card1: ScratchCardComponent;
+  @ViewChild('card2') card2: ScratchCardComponent;
+  @ViewChild('wc1') wc1: ScratchCardComponent;
+  @ViewChild('wc2') wc2: ScratchCardComponent;
 
   constructor() {
 
@@ -38,23 +40,65 @@ export class AppComponent implements AfterViewInit {
 
   cli() {
     let tuple = this.target.deck[this.target.cursor % this.target.deck.length];
-    this.kanji.nativeElement.innerText = `${this.target.cursor % this.target.deck.length + 1} / ${this.target.deck.length} ${tuple[0]}`;
-    this.pron.nativeElement.innerText = tuple[1];
+    this.wc1.value = `${this.target.cursor % this.target.deck.length + 1} / ${this.target.deck.length} ${tuple[0]}`;
+    this.card1.value = tuple[1];
+    this.currentWord = tuple[0];
+    this.currentPron = tuple[1];
     this.target.cursor++;
-    this.hide = true;
+    this.card1.hide = true;
   }
 
-  hide: boolean = true;
+  currentWord: string = '';
+  currentPron: string = '';
 
-  over(e: MouseEvent) {
-    e.stopPropagation();
-    this.hide = false;
-    // console.log(this.hide);
+  // bug: 听力界面有滚动条
+  // 听和读进度独立
+  next() {
+
+    let tuple = this.target.deck[this.target.cursor % this.target.deck.length];
+    this.wc2.value = `${this.target.cursor % this.target.deck.length + 1} / ${this.target.deck.length}`;
+    this.currentWord = tuple[0];
+    this.currentPron = tuple[1];
+    this.card2.value = tuple[0];
+    this.card2.hide = true;
+    setTimeout(() => { this.speak(tuple[0]) }, 100);
+    this.target.cursor++;
+  }
+
+  relisten() {
+
+    setTimeout(() => { this.speak(this.currentWord) }, 100);
+  }
+
+
+  speak(word: string) {
+    if ('speechSynthesis' in window) {
+      var synthesis = window.speechSynthesis;
+
+      // Get the first `en` language voice in the list
+      var voice = synthesis.getVoices().filter(function (voice) {
+        return voice.lang === 'ja';
+      })[0];
+
+      // Create an utterance object
+      var utterance = new SpeechSynthesisUtterance(word);
+
+      // Set utterance properties
+      utterance.voice = voice;
+      utterance.pitch = 1.0;
+      utterance.rate = 0.8;
+      utterance.volume = 1;
+
+      // Speak the utterance
+      synthesis.speak(utterance);
+    } else {
+      console.log('Text-to-speech not supported.');
+    }
+
   }
 
   dontknow() {
-    let k = this.kanji.nativeElement.innerText;
-    let p = this.pron.nativeElement.innerText;
-    this.forgot.append(k, p);
+
+    this.forgot.append(this.currentWord, this.currentPron);
   }
 }

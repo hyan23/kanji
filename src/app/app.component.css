@@ -5,34 +5,23 @@
     background-color: ghostwhite;
 }
 
-#kanji {
-    font-size: 48px;
-    line-height: 70px;
-    height: 70px;
-
-}
-
-#container {
-    width: 200px;
-    height: 70px;
-    text-align: center;
-}
-
-#pron {
-    font-size: 48px;
-    line-height: 70px;
-}
-
-#shield {
-    position: absolute;
-    width: 200px;
-    height: 70px;
-    background-color: darkgrey;
-}
 
 @media (orientation: landscape) {
     #main {
         max-width: 480px;
         margin: auto;
     }
+}
+
+.example-loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
