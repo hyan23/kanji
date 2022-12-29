@@ -1,0 +1,8 @@
+<div id="main" fxLayout="column">
+    <mat-form-field fxFlex="1 1 auto">
+        <mat-label>单词表</mat-label>
+        <textarea [(ngModel)]="wordlist" cdkAutosizeMaxRows="20" cdkTextareaAutosize matInput></textarea>
+    </mat-form-field>
+    <div [style.display]="show?'flex':'none'">导入成功！</div>
+    <button mat-raised-button (click)="init()">导入</button>
+</div>

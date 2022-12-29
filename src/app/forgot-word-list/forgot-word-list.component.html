@@ -1,0 +1,10 @@
+<div fxLayout="column">
+
+    <mat-list fxFlex="1 1 auto">
+        <mat-list-item *ngFor="let w of wordList">
+            <span matListItemTitle>{{w[0]}}</span>
+            <span matListItemLine>{{w[1]}}</span>
+        </mat-list-item>
+    </mat-list>
+    <button mat-raised-button (click)="copy()">拷贝</button>
+</div>
