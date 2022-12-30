@@ -20,8 +20,53 @@
     bottom: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.15);
-    z-index: 9999;
+    z-index: 19;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+
+.hint {
+    position: absolute;
+    background-color: aquamarine;
+    /* border: bisque; */
+    /* width: 200px; */
+    height: 24px;
+    line-height: 20px;
+    font-size: 16px;
+    top: 10%;
+    z-index: 9;
+}
+
+.hint-anim {
+    display: block;
+    animation: fade 1s linear forwards;
+}
+
+.hint-anim-2 {
+
+    display: block;
+    animation: fade2 1s linear forwards;
+}
+
+@keyframes fade {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+
+@keyframes fade2 {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }

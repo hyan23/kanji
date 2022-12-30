@@ -1,15 +1,15 @@
-#container {
+.container {
     width: 200px;
     height: 70px;
     text-align: center;
 }
 
-#pron {
+.pron {
     font-size: 48px;
     line-height: 70px;
 }
 
-#shield {
+.shield {
     position: absolute;
     width: 200px;
     height: 70px;

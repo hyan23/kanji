@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-target-word-list',
@@ -6,6 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./target-word-list.component.css']
 })
 export class TargetWordListComponent {
+  @Output() imported = new EventEmitter<void>();
+
+
   protected wordlist: string = "";
 
   private lines: string[];
@@ -46,6 +49,10 @@ export class TargetWordListComponent {
 
     this.show = true;
     setTimeout(() => this.show = false, 1000);
+
+    if (this.deck.length > 0 && this.imported) {
+      this.imported.next();
+    }
   }
 
   show: boolean = false;
@@ -73,5 +80,7 @@ export class TargetWordListComponent {
 
     return array;
   }
+
+
 
 }

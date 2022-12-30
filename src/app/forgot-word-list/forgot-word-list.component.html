@@ -1,10 +1,13 @@
-<div fxLayout="column">
+<div fxLayout="column" id="main">
 
-    <mat-list fxFlex="1 1 auto">
+    <mat-list fxFlex="1 0 auto">
         <mat-list-item *ngFor="let w of wordList">
             <span matListItemTitle>{{w[0]}}</span>
             <span matListItemLine>{{w[1]}}</span>
         </mat-list-item>
     </mat-list>
-    <button mat-raised-button (click)="copy()">拷贝</button>
+    <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center" fxFlex="0 0 auto">
+        <button mat-raised-button (click)="copy()">拷贝</button>
+        <button mat-raised-button (click)="clear()">清空</button>
+    </div>
 </div>

@@ -1,11 +1,14 @@
 <mat-tab-group id="main" animationDuration="200" color="decent" preserveContent="true" headerPosition="below">
   <mat-tab label="单词表">
-    <app-target-word-list #target></app-target-word-list>
+    <app-target-word-list (imported)="onImported()" #target></app-target-word-list>
 
 
 
   </mat-tab>
   <mat-tab label="测验">
+    <div [class]="vv>=0?'hint hint-anim':'hint hint-anim-2'" [style.display]="lastOne.length>0?'block':'none'">
+      上题答案：{{lastOn|async}}
+    </div>
     <div class="example-loading-shade" *ngIf="this.target.deck.length==0">
       <p style="margin: auto;color: crimson;font-size: 24px;">请先导入单词!</p>
     </div>
@@ -19,11 +22,11 @@
             <mat-button-toggle-group #group="matButtonToggleGroup">
               <mat-button-toggle checked value="list">列表</mat-button-toggle>
             </mat-button-toggle-group>
-            <button [disabled]="group.value!=='list'" mat-raised-button (click)="target.shuffle();cli()">洗牌</button>
+            <button [disabled]="group.value!=='list'" mat-raised-button (click)="readShuffle()">洗牌</button>
           </div>
 
           <div fxFlex="1 1 auto" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center center">
-            <app-word-card #wc1></app-word-card>
+            <app-word-card [value]="currentCursor + ' ' + currentWord" #wc1></app-word-card>
 
             <!-- 标记正确 -->
             <!--
@@ -35,10 +38,11 @@
       自动获取单词释义
       语音识别添加单词
     -->
-            <app-scratch-card #card1></app-scratch-card>
+            <app-scratch-card [value]="currentPron" #card1></app-scratch-card>
           </div>
 
           <div fxLayout="row" fxLayoutGap="10px">
+            <button mat-raised-button [disabled]="this.target.cursor===0" (click)="lastword()">上一个</button>
             <button mat-raised-button (click)="dontknow()">不认识</button>
             <button mat-raised-button (click)="cli()">下一个</button>
           </div>
@@ -50,13 +54,22 @@
 
       <mat-tab label="听">
         <div style="height: 100%;" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center center">
-          <button mat-raised-button (click)="target.shuffle();">洗牌</button>
+
+          <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+            模式：
+            <mat-button-toggle-group #group2="matButtonToggleGroup">
+              <mat-button-toggle checked value="list">列表</mat-button-toggle>
+              <mat-button-toggle value="deathmatch">死斗</mat-button-toggle>
+            </mat-button-toggle-group>
+            <button mat-raised-button (click)="listenShuffle()">洗牌</button>
+          </div>
 
           <div fxFlex="1 1 auto">
-            <app-word-card #wc2></app-word-card>
-            <app-scratch-card #card2></app-scratch-card>
+            <app-word-card [value]="currentCursor" #wc2></app-word-card>
+            <app-scratch-card [value]="currentWord" #card2></app-scratch-card>
           </div>
           <div fxLayout="row" fxLayoutGap="10px">
+            <button mat-raised-button [disabled]="this.target.cursor===0" (click)="last()">上一个</button>
             <button mat-raised-button (click)="dontknow()">不认识</button>
             <button mat-raised-button (click)="relisten()">重听</button>
             <button mat-raised-button (click)="next()">下一个</button>

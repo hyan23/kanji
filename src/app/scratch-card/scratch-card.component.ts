@@ -10,7 +10,8 @@ export class ScratchCardComponent {
   hide: boolean = true;
   @Input() value: string = '';
   over(e: MouseEvent) {
-    e.stopPropagation();
+    // 这条似乎会让{{value}}在刷新几次后不起作用？
+    // e.stopPropagation();
     this.hide = false;
     // console.log(this.hide);
   }

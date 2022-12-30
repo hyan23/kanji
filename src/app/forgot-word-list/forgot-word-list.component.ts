@@ -1,5 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmData, MakeConfirmComponent } from '../make-confirm/make-confirm.component';
 
 @Component({
   selector: 'app-forgot-word-list',
@@ -9,7 +11,7 @@ import { Component } from '@angular/core';
 export class ForgotWordListComponent {
 
 
-  constructor(private clip: Clipboard) {
+  constructor(private clip: Clipboard, private dialog: MatDialog) {
 
   }
   append(a: string, b: string) {
@@ -19,6 +21,21 @@ export class ForgotWordListComponent {
   wordList: string[][] = [];
 
 
+
+  clear() {
+
+
+    const dialogRef = this.dialog.open(MakeConfirmComponent,
+      { data: { yesText: '是', noText: '否', prompt: '确定清空吗？' } as ConfirmData } as MatDialogConfig);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result) {
+        this.wordList = [];
+
+      }
+    });
+  }
 
   copy() {
 
