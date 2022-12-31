@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { BookShelfService } from '../book-shelf.service';
 
 @Component({
   selector: 'app-target-word-list',
@@ -6,6 +7,9 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./target-word-list.component.css']
 })
 export class TargetWordListComponent {
+  constructor(private bs: BookShelfService) {
+
+  }
   @Output() imported = new EventEmitter<void>();
 
 
@@ -25,7 +29,6 @@ export class TargetWordListComponent {
   // 生词表自动滚动
   // 组件化 禁止编辑 复制清空按钮
   protected init() {
-
     console.log(this.wordlist);
     this.lines = this.wordlist.split(/\r?\n/g);
     this.lines.forEach((value) => {
