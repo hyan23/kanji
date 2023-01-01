@@ -1,8 +1,8 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BookShelfService, parseRaw } from '../book-shelf.service';
-
 @Component({
   selector: 'app-book-name-dialog',
   template: `<h1 mat-dialog-title>保存词书：</h1>
@@ -22,6 +22,7 @@ import { BookShelfService, parseRaw } from '../book-shelf.service';
 </div>`,
 })
 export class BookNameDialogComponent {
+
   bookName: string;
   desc: string;
 }
@@ -29,16 +30,44 @@ export class BookNameDialogComponent {
 @Component({
   selector: 'app-target-word-list',
   templateUrl: './target-word-list.component.html',
-  styleUrls: ['./target-word-list.component.css']
+  styleUrls: ['./target-word-list.component.css'],
+  animations: [
+    trigger('openClose', [
+      // ...
+      state('open', style({
+        height: '32px',
+      })),
+      state('closed', style({
+        height: '0px',
+      })),
+      transition('open => closed', [
+        animate('0.2s')
+      ]),
+      transition('closed => open', [
+        animate('0.2s')
+      ]),
+    ]),
+  ],
 })
 export class TargetWordListComponent {
   constructor(private bs: BookShelfService, private dialog: MatDialog, private snackBar: MatSnackBar) {
+    setTimeout(() => {
+      let book = this.bs.lastUsedBook();
+      if (book) {
+        this.open = true;
+        setTimeout(() => {
+          this.open = false;
+        }, 3000);
+      }
+
+    }, 1000);
+
 
   }
 
   protected wordlist: string = "";
 
-
+  open: boolean = false;
   // 单词表tips
   // 手机不同layout
   // 刮刮卡渐隐动画
@@ -46,6 +75,18 @@ export class TargetWordListComponent {
   // 生词表自动滚动
   // 组件化 禁止编辑 复制清空按钮
 
+
+  importLastUsed(e: MouseEvent) {
+    e.preventDefault();
+    let book = this.bs.lastUsedBook();
+    if (book) {
+      this.bs.use(book!!);
+      this.snackBar.open('已导入', 'OK', { duration: 1000 });
+    } else {
+      // TODO:
+    }
+    this.open = false;
+  }
 
   import() {
     let list = parseRaw(this.wordlist);

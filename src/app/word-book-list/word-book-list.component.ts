@@ -17,7 +17,7 @@ export class WordBookListComponent {
   constructor(private bs: BookShelfService, private dialog: MatDialog, private clipboard: Clipboard,
     private snackbar: MatSnackBar) {
     this.bs.bookShelfChanged.pipe(startWith(0)).subscribe(() => {
-      this.allBooks = this.bs.allBooks();
+      this.allBooks = this.bs.allBooks().sort((a, b) => { return b.importTime - a.importTime; });
     });
   }
   @Input() name: string;

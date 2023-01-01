@@ -1,4 +1,10 @@
 <div id="main" fxLayout="column">
+    <div [@openClose]="open?'open':'closed'" class="tip" fxLayout="row" fxLayoutAlign="center center">
+        <span>是否导入上次使用词书?</span>
+        <span fxFlex="1 1 auto"></span>
+        <a href="#" (click)="importLastUsed($event);">导入</a>
+    </div>
+
     <mat-form-field fxFlex="1 1 auto">
         <mat-label>单词表</mat-label>
         <textarea [(ngModel)]="wordlist" cdkAutosizeMaxRows="20" cdkTextareaAutosize matInput></textarea>

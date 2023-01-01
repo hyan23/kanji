@@ -2,11 +2,12 @@
 
     <mat-list fxFlex="1 0 auto">
         <mat-list-item *ngFor="let w of wordList">
-            <span matListItemTitle>{{w[0]}}</span>
-            <span matListItemLine>{{w[1]}}</span>
+            <span matListItemTitle>{{w.from}}</span>
+            <span matListItemLine>{{w.to}}</span>
         </mat-list-item>
     </mat-list>
     <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center" fxFlex="0 0 auto">
+        <button mat-raised-button (click)="save()">存为词书</button>
         <button mat-raised-button (click)="copy()">拷贝</button>
         <button mat-raised-button (click)="clear()">清空</button>
     </div>

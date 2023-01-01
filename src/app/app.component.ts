@@ -129,22 +129,31 @@ export class AppComponent implements AfterViewInit {
 
 
   speak(word: string) {
+
     if ('speechSynthesis' in window) {
       var synthesis = window.speechSynthesis;
 
+      // 有点影响性能？
+      if (synthesis.speaking) {
+        synthesis.cancel();
+      }
+
       // Get the first `en` language voice in the list
-      var voice = synthesis.getVoices().filter(function (voice) {
-        return voice.lang === 'ja';
-      })[0];
+      // var voice = synthesis.getVoices().filter(function (voice) {
+      //   return voice.lang === 'en';
+      // })[0];
+
 
       // Create an utterance object
       var utterance = new SpeechSynthesisUtterance(word);
 
       // Set utterance properties
-      utterance.voice = voice;
+      // utterance.voice = voice;
       utterance.pitch = 1.0;
       utterance.rate = 0.8;
       utterance.volume = 1;
+      //https://en.wikipedia.org/wiki/IETF_language_tag#:~:text=An%20IETF%20BCP%2047%20language,the%20IANA%20Language%20Subtag%20Registry.
+      utterance.lang = 'ja';
 
       // Speak the utterance
       synthesis.speak(utterance);

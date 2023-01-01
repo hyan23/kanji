@@ -67,13 +67,25 @@ export class BookShelfService {
   currentBookChanged: Subject<WordBook> = new Subject();
 
   use(book: WordBook) {
+    let lastUsed = structuredClone(book);
+    lastUsed.id = this.LAST_USED_BOOK_SPECIAL_ID;
+    this.saveBook(lastUsed);
     this.currentBook = book;
     this.currentBookChanged.next(book);
   }
 
+  lastUsedBook(): WordBook | undefined {
+    let value = localStorage.getItem(this.makeKey(this.LAST_USED_BOOK_SPECIAL_ID));
+    if (value) {
+      let book = JSON.parse(value!!);
+      return book;
+    }
+    return undefined;
+  }
+
   saveBook(book: WordBook): boolean {
     try {
-      localStorage.setItem(this.makeKey(book), JSON.stringify(book));
+      localStorage.setItem(this.makeKey(book.id), JSON.stringify(book));
     } catch (e) {
       console.log(e);
       return false;
@@ -83,7 +95,7 @@ export class BookShelfService {
   }
 
   removeBook(book: WordBook) {
-    localStorage.removeItem(this.makeKey(book));
+    localStorage.removeItem(this.makeKey(book.id));
     this.bookShelfChanged.next();
   }
 
@@ -97,15 +109,16 @@ export class BookShelfService {
         arr.push(book);
       }
     }
-    return arr;
+    return arr.filter(x => x.id !== this.LAST_USED_BOOK_SPECIAL_ID);
   }
 
+  private LAST_USED_BOOK_SPECIAL_ID = 'lastUsedBook';
   private WORD_BOOK_KEY_PREFIX = "kanji-word-book-";
   private isWordBook(key: string): boolean {
     return key.startsWith(this.WORD_BOOK_KEY_PREFIX);
   }
 
-  private makeKey(book: WordBook): string {
-    return `${this.WORD_BOOK_KEY_PREFIX}${book.id}`;
+  private makeKey(id: string): string {
+    return `${this.WORD_BOOK_KEY_PREFIX}${id}`;
   }
 }

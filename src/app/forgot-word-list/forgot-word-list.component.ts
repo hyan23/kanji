@@ -1,7 +1,10 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BookShelfService, Word } from '../book-shelf.service';
 import { ConfirmData, MakeConfirmComponent } from '../make-confirm/make-confirm.component';
+import { BookNameDialogComponent } from '../target-word-list/target-word-list.component';
 
 @Component({
   selector: 'app-forgot-word-list',
@@ -11,14 +14,17 @@ import { ConfirmData, MakeConfirmComponent } from '../make-confirm/make-confirm.
 export class ForgotWordListComponent {
 
 
-  constructor(private clip: Clipboard, private dialog: MatDialog) {
+  constructor(private clip: Clipboard, private dialog: MatDialog, private snackBar: MatSnackBar,
+    private bs: BookShelfService) {
 
   }
+
+  id: number = 0;
   append(a: string, b: string) {
-    this.wordList.push([a, b]);
+    this.wordList.push({ from: a, to: b, id: `${this.id++}` });
   }
 
-  wordList: string[][] = [];
+  wordList: Word[] = [];
 
 
 
@@ -32,8 +38,19 @@ export class ForgotWordListComponent {
       console.log('The dialog was closed');
       if (result) {
         this.wordList = [];
+        this.id = 0;
 
       }
+    });
+  }
+
+  save() {
+
+    const dialogRef = this.dialog.open(BookNameDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.bs.saveBook({ book: this.wordList, name: result[0], id: `id-${Math.random()}`, raw: '', importTime: Date.now(), info: { desc: result[1] } });
     });
   }
 
@@ -41,8 +58,10 @@ export class ForgotWordListComponent {
 
     let s = '';
     for (let w of this.wordList) {
-      s += w[0] + ' ' + w[1] + '\n';
+      s += w.from + ' ' + w.to + '\n';
     }
     this.clip.copy(s);
+    this.snackBar.open('已拷贝', 'OK', { duration: 1000 });
+
   }
 }
