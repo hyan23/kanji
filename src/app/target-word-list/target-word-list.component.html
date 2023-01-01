@@ -2,7 +2,11 @@
     <mat-form-field fxFlex="1 1 auto">
         <mat-label>单词表</mat-label>
         <textarea [(ngModel)]="wordlist" cdkAutosizeMaxRows="20" cdkTextareaAutosize matInput></textarea>
+        <button class="scan" matSuffix mat-icon-button><mat-icon>photo_library</mat-icon></button>
     </mat-form-field>
-    <div [style.display]="show?'flex':'none'">导入成功！</div>
-    <button mat-raised-button (click)="init()">输好了，导入</button>
+
+    <div fxLayout="row" fxLayoutGap="10px">
+        <button fxFlex="1 0 1" mat-raised-button (click)="import()">输好了，导入</button>
+        <button fxFlex="1 0 1" mat-raised-button (click)="save()">保存</button>
+    </div>
 </div>

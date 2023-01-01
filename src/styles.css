@@ -13,5 +13,18 @@ body {
 
 .mat-mdc-tab-body-wrapper {
     flex-grow: 1;
-    padding: 20px;
+    padding: 10px;
+}
+
+button.mat-mdc-button .mat-mdc-button-touch-target,
+button.mat-mdc-unelevated-button .mat-mdc-button-touch-target,
+button.mat-mdc-raised-button .mat-mdc-button-touch-target,
+button.mat-mdc-outlined-button .mat-mdc-button-touch-target {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: none;
+    height: inherit;
+    position: absolute;
 }

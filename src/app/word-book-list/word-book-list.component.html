@@ -1,0 +1,15 @@
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let a of allBooks">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{a.name}} </mat-panel-title>
+            <mat-panel-description>
+                {{a?.info?.desc}}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <button mat-icon-button (click)="use(a)"><mat-icon>file_open</mat-icon> </button>
+        <button mat-icon-button (click)="copy(a)"><mat-icon>content_copy</mat-icon> </button>
+        <button mat-icon-button (click)="view(a)"><mat-icon>visibility</mat-icon> </button>
+        <button mat-icon-button (click)="del(a)"><mat-icon>delete_forever</mat-icon> </button>
+    </mat-expansion-panel>
+</mat-accordion>

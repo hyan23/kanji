@@ -5,3 +5,9 @@
 #main {
     height: 100%;
 }
+
+.scan {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+}

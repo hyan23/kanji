@@ -1,7 +1,15 @@
-<mat-tab-group dynamicHeight id="main" animationDuration="200" color="decent" preserveContent="true"
-  headerPosition="below">
+<mat-tab-group id="main" animationDuration="200" color="decent" preserveContent="true" headerPosition="below">
   <mat-tab label="单词表">
-    <app-target-word-list (imported)="onImported()" #target></app-target-word-list>
+
+
+    <mat-tab-group style="height: 100%;" animationDuration="100" color="decent" preserveContent="true">
+      <mat-tab label="导入">
+        <app-target-word-list #target></app-target-word-list>
+      </mat-tab>
+      <mat-tab label="词书">
+        <app-word-book-list name="四级核心A"></app-word-book-list>
+      </mat-tab>
+    </mat-tab-group>
 
 
 
@@ -10,7 +18,7 @@
     <div [class]="vv>=0?'hint hint-anim':'hint hint-anim-2'" [style.display]="lastOne.length>0?'block':'none'">
       上题答案：{{lastOn|async}}
     </div>
-    <div class="example-loading-shade" *ngIf="this.target.deck.length==0">
+    <div class="example-loading-shade" *ngIf="this.deck.length==0">
       <p style="margin: auto;color: crimson;font-size: 24px;">请先导入单词!</p>
     </div>
     <mat-tab-group style="height: 100%;" animationDuration="200" color="decent" preserveContent="true">
@@ -43,7 +51,7 @@
           </div>
 
           <div fxLayout="row" fxLayoutGap="10px">
-            <button mat-raised-button [disabled]="this.target.cursor===0" (click)="lastword()">上一个</button>
+            <button mat-raised-button [disabled]="this.cursor===0" (click)="lastword()">上一个</button>
             <button mat-raised-button (click)="dontknow()">不认识</button>
             <button mat-raised-button (click)="cli()">下一个</button>
           </div>
@@ -54,7 +62,7 @@
       </mat-tab>
 
       <mat-tab label="听">
-        <div style="height: 100%;" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center center">
+        <div style="height: 100%;padding: 20px;" fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center center">
 
           <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
             模式：
@@ -65,12 +73,12 @@
             <button mat-raised-button (click)="listenShuffle()">洗牌</button>
           </div>
 
-          <div fxFlex="1 1 auto">
+          <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px" fxFlex="1 1 auto">
             <app-word-card [value]="currentCursor" #wc2></app-word-card>
             <app-scratch-card [value]="currentWord" #card2></app-scratch-card>
           </div>
           <div fxLayout="row" fxLayoutGap="10px">
-            <button mat-raised-button [disabled]="this.target.cursor===0" (click)="last()">上一个</button>
+            <button mat-raised-button [disabled]="this.cursor===0" (click)="last()">上一个</button>
             <button mat-raised-button (click)="dontknow()">不认识</button>
             <button mat-raised-button (click)="relisten()">重听</button>
             <button mat-raised-button (click)="next()">下一个</button>

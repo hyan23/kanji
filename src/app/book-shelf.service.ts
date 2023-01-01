@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 // 记单词本质是从一个事物认出另一个事物，例如从英语单词认出汉语释义、从英语语音认出英语单词
 // 这种从一个事物到另一个事物的关系可以用二元组来表示
@@ -17,8 +18,8 @@ export interface Word {
 }
 
 export interface WorkBookInfo {
-  author: string;
-  desc: string;
+  author?: string;
+  desc?: string;
 }
 
 export interface WordBook {
@@ -27,7 +28,28 @@ export interface WordBook {
   id: string;
   raw: string;
   info?: WorkBookInfo;
-  importTime: Date;
+  importTime: number;
+}
+
+export function parseRaw(raw: string): Word[] {
+  let id = 0;
+  let list: Word[] = [];
+  let lines = raw.split(/\r?\n/g);
+  lines.forEach((value) => {
+    let sp = value.split(/\s+/).map(x => x.trim());
+    if (sp.length == 2 && sp[0].length > 0 && sp[1].length > 0) {
+      let left = sp[0].split(/、|、/g).map(x => x.trim()).filter(x => x.length > 0);
+      let right = sp[1].split(/、|、/g).map(x => x.trim()).filter(x => x.length > 0);
+      for (let i of left) {
+        for (let j of right) {
+          list.push({ from: i, to: j, id: `${id++}` });
+        }
+      }
+    } else {
+      console.log('warn: ' + value);
+    }
+  });
+  return list;
 }
 
 @Injectable({
@@ -35,8 +57,18 @@ export interface WordBook {
 })
 export class BookShelfService {
 
+  currentBook?: WordBook = undefined;
+
   constructor() {
 
+  }
+
+  bookShelfChanged: Subject<void> = new Subject();
+  currentBookChanged: Subject<WordBook> = new Subject();
+
+  use(book: WordBook) {
+    this.currentBook = book;
+    this.currentBookChanged.next(book);
   }
 
   saveBook(book: WordBook): boolean {
@@ -46,11 +78,13 @@ export class BookShelfService {
       console.log(e);
       return false;
     }
+    this.bookShelfChanged.next();
     return true;
   }
 
   removeBook(book: WordBook) {
     localStorage.removeItem(this.makeKey(book));
+    this.bookShelfChanged.next();
   }
 
   allBooks(): WordBook[] {
@@ -72,6 +106,6 @@ export class BookShelfService {
   }
 
   private makeKey(book: WordBook): string {
-    return `${this.WORD_BOOK_KEY_PREFIX}{book.id}`;
+    return `${this.WORD_BOOK_KEY_PREFIX}${book.id}`;
   }
 }

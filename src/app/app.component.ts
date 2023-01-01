@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
+import { BookShelfService, Word } from './book-shelf.service';
 import { ForgotWordListComponent } from './forgot-word-list/forgot-word-list.component';
 import { ConfirmData, MakeConfirmComponent } from './make-confirm/make-confirm.component';
 import { ScratchCardComponent } from './scratch-card/scratch-card.component';
@@ -25,7 +26,8 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('wc1') wc1: ScratchCardComponent;
   @ViewChild('wc2') wc2: ScratchCardComponent;
 
-  constructor(public dialog: MatDialog, public _snackbar: MatSnackBar) {
+  constructor(public dialog: MatDialog, public _snackbar: MatSnackBar,
+    private bs: BookShelfService) {
     this.lastOn.subscribe(() => {
       this.vv *= -1;
 
@@ -42,29 +44,34 @@ export class AppComponent implements AfterViewInit {
         // alert(this.group.value);
       }
     });
+    this.bs.currentBookChanged.subscribe(x => {
+      this.deck = [...x.book];
+      this.cursor = 0;
+      this.start();
+    });
   }
 
   lastword() {
-    this.lastOne = this.currentWord + ' ' + this.currentPron;
-    this.lastOn.next(this.lastOne);
-    if (this.target.cursor <= 0) {
+    // this.lastOne = this.currentWord + ' ' + this.currentPron;
+    // this.lastOn.next(this.lastOne);
+    if (this.cursor <= 0) {
       return;
     }
-    this.target.cursor--;
-    let tuple = this.target.deck[this.target.cursor % this.target.deck.length];
-    this.currentWord = tuple[0];
-    this.currentPron = tuple[1];
-    this.currentCursor = `${this.target.cursor % this.target.deck.length + 1} / ${this.target.deck.length}`;
+    this.cursor--;
+    let tuple = this.deck[this.cursor % this.deck.length];
+    this.currentWord = tuple.from;
+    this.currentPron = tuple.to;
+    this.currentCursor = `${this.cursor % this.deck.length + 1} / ${this.deck.length}`;
     this.card1.hide = true;
   }
   cli() {
     this.lastOne = this.currentWord + ' ' + this.currentPron;
     this.lastOn.next(this.lastOne);
-    this.target.cursor++;
-    let tuple = this.target.deck[this.target.cursor % this.target.deck.length];
-    this.currentWord = tuple[0];
-    this.currentPron = tuple[1];
-    this.currentCursor = `${this.target.cursor % this.target.deck.length + 1} / ${this.target.deck.length}`;
+    this.cursor++;
+    let tuple = this.deck[this.cursor % this.deck.length];
+    this.currentWord = tuple.from;
+    this.currentPron = tuple.to;
+    this.currentCursor = `${this.cursor % this.deck.length + 1} / ${this.deck.length}`;
     this.card1.hide = true;
   }
 
@@ -74,29 +81,31 @@ export class AppComponent implements AfterViewInit {
   lastOne: string = '';
   lastOn: Subject<string> = new Subject();
 
-  onImported() {
-    let tuple = this.target.deck[this.target.cursor % this.target.deck.length];
-    this.currentWord = tuple[0];
-    this.currentPron = tuple[1];
-    this.currentCursor = `${(this.target.cursor % this.target.deck.length) + 1} / ${this.target.deck.length}`;
+  start() {
+    if (this.deck.length === 0) {
+      return;
+    }
+    let tuple = this.deck[this.cursor % this.deck.length];
+    this.currentWord = tuple.from;
+    this.currentPron = tuple.to;
+    this.currentCursor = `${(this.cursor % this.deck.length) + 1} / ${this.deck.length}`;
     this.card2.hide = true;
     this.card1.hide = true;
   }
 
   last() {
-    this.lastOne = this.currentWord + ' ' + this.currentPron;
-    this.lastOn.next(this.lastOne);
-    if (this.target.cursor <= 0) {
+    // this.lastOne = this.currentWord + ' ' + this.currentPron;
+    // this.lastOn.next(this.lastOne);
+    if (this.cursor <= 0) {
       return;
     }
-    this.target.cursor--;
-    let tuple = this.target.deck[this.target.cursor % this.target.deck.length];
-    this.currentWord = tuple[0];
-    this.currentPron = tuple[1];
-    this.currentCursor = `${this.target.cursor % this.target.deck.length + 1} / ${this.target.deck.length}`;
+    this.cursor--;
+    let tuple = this.deck[this.cursor % this.deck.length];
+    this.currentWord = tuple.from;
+    this.currentPron = tuple.to;
+    this.currentCursor = `${this.cursor % this.deck.length + 1} / ${this.deck.length}`;
     this.card2.hide = true;
-    setTimeout(() => { this.speak(tuple[0]) }, 100);
-    console.log(this.currentWord);
+    setTimeout(() => { this.speak(tuple.from) }, 100);
   }
 
   // bug: 听力界面有滚动条
@@ -104,14 +113,13 @@ export class AppComponent implements AfterViewInit {
   next() {
     this.lastOne = this.currentWord + ' ' + this.currentPron;
     this.lastOn.next(this.lastOne);
-    this.target.cursor++;
-    let tuple = this.target.deck[this.target.cursor % this.target.deck.length];
-    this.currentWord = tuple[0];
-    this.currentPron = tuple[1];
-    this.currentCursor = `${this.target.cursor % this.target.deck.length + 1} / ${this.target.deck.length}`;
+    this.cursor++;
+    let tuple = this.deck[this.cursor % this.deck.length];
+    this.currentWord = tuple.from;
+    this.currentPron = tuple.to;
+    this.currentCursor = `${this.cursor % this.deck.length + 1} / ${this.deck.length}`;
     this.card2.hide = true;
-    setTimeout(() => { this.speak(tuple[0]) }, 100);
-    console.log(this.currentWord);
+    setTimeout(() => { this.speak(tuple.from) }, 100);
   }
 
   relisten() {
@@ -148,11 +156,10 @@ export class AppComponent implements AfterViewInit {
 
   dontknow() {
     if (this.group2.value === 'deathmatch') {
-      // 洗牌时需要清理
-      this.target.deck.push([this.currentWord, this.currentPron]);
+      this.deck.push({ from: this.currentWord, to: this.currentPron, id: `${Math.random()}` });
     } else {
 
-      this._snackbar.open('已添加', 'OK', { duration: 1000 } as MatSnackBarConfig);
+      this._snackbar.open('已添加', 'OK', { duration: 1000 });
       this.forgot.append(this.currentWord, this.currentPron);
     }
   }
@@ -166,25 +173,48 @@ export class AppComponent implements AfterViewInit {
       console.log('The dialog was closed');
       if (result) {
 
-        this.target.shuffle();
-        // this.cli();
-        this.onImported();
+        this.shuffle();
+        this.start();
       }
     });
   }
 
   listenShuffle() {
-
-    const dialogRef = this.dialog.open(MakeConfirmComponent,
-      { data: { yesText: '是', noText: '否', prompt: '确定洗牌吗？' } as ConfirmData } as MatDialogConfig);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      if (result) {
-
-        this.target.shuffle();
-        this.onImported();
-      }
-    });
+    this.readShuffle();
   }
+
+  deck: Word[] = [];
+  cursor: number = 0;
+
+  shuffle() {
+    if (this.bs.currentBook) {
+      this.deck = this.shuffle1([...this.bs.currentBook!!.book] as []);
+      // console.log(this.deck);
+      this.cursor = 0;
+    } else {
+      this.deck = [];
+      this.cursor = 0;
+    }
+  }
+
+  // https://stackoverflow.com/a/2450976
+  private shuffle1(array: []) {
+    let currentIndex = array.length, randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+  }
+
+
 }
