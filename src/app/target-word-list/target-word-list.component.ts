@@ -1,8 +1,56 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
+import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BookShelfService, parseRaw } from '../book-shelf.service';
+import { TakeImageDialogComponent } from '../take-image-dialog/take-image-dialog.component';
+
+
+
+
+@Component({
+  selector: 'bottom-sheet-overview-example-sheet',
+  template: `
+  <mat-nav-list>
+  <a href="#" mat-list-item (click)="fromCamera($event)">
+    <span matListItemTitle>相机</span>
+  </a>
+
+  <a href="#" mat-list-item (click)="fromGallery($event)">
+    <span matListItemTitle>相册</span>
+  </a>
+</mat-nav-list>`,
+})
+export class BottomSheetOverviewExampleSheet {
+  constructor(private _bottomSheetRef: MatBottomSheetRef<BottomSheetOverviewExampleSheet>,
+    private dialog: MatDialog) { }
+
+  fromCamera(event: MouseEvent): void {
+    this._bottomSheetRef.dismiss();
+    event.preventDefault();
+    this.dialog.open(TakeImageDialogComponent,
+      {
+        data: 'camera',
+        panelClass: 'fullscreen-dialog'
+      }
+    );
+  }
+
+
+  fromGallery(event: MouseEvent): void {
+    this._bottomSheetRef.dismiss();
+    event.preventDefault();
+    this.dialog.open(TakeImageDialogComponent,
+      {
+        data: 'file',
+        panelClass: 'fullscreen-dialog'
+      }
+    );
+  }
+}
+
+
 @Component({
   selector: 'app-book-name-dialog',
   template: `<h1 mat-dialog-title>保存词书：</h1>
@@ -50,7 +98,9 @@ export class BookNameDialogComponent {
   ],
 })
 export class TargetWordListComponent {
-  constructor(private bs: BookShelfService, private dialog: MatDialog, private snackBar: MatSnackBar) {
+  constructor(private bs: BookShelfService, private dialog: MatDialog, private snackBar: MatSnackBar,
+    private _bottomSheet: MatBottomSheet
+  ) {
     setTimeout(() => {
       let book = this.bs.lastUsedBook();
       if (book) {
@@ -63,6 +113,11 @@ export class TargetWordListComponent {
     }, 1000);
 
 
+  }
+
+
+  openBottomSheet(): void {
+    this._bottomSheet.open(BottomSheetOverviewExampleSheet);
   }
 
   protected wordlist: string = "";

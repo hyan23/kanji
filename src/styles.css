@@ -28,3 +28,17 @@ button.mat-mdc-outlined-button .mat-mdc-button-touch-target {
     height: inherit;
     position: absolute;
 }
+
+/* https://www.freakyjolly.com/angular-material-full-screen-dialog-modal/ */
+.fullscreen-dialog {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: 100%;
+    height: 100%;
+}
+
+@media (orientation: landscape) {
+    .fullscreen-dialog {
+        max-width: 480px !important;
+    }
+}

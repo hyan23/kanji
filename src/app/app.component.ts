@@ -152,8 +152,9 @@ export class AppComponent implements AfterViewInit {
       utterance.pitch = 1.0;
       utterance.rate = 0.8;
       utterance.volume = 1;
-      //https://en.wikipedia.org/wiki/IETF_language_tag#:~:text=An%20IETF%20BCP%2047%20language,the%20IANA%20Language%20Subtag%20Registry.
-      utterance.lang = 'ja';
+      // https://appmakers.dev/bcp-47-language-codes-list/
+      utterance.lang = 'ja-JP';
+      // utterance.lang = 'zh-CN';
 
       // Speak the utterance
       synthesis.speak(utterance);

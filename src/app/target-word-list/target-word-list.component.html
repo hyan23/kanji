@@ -8,7 +8,8 @@
     <mat-form-field fxFlex="1 1 auto">
         <mat-label>单词表</mat-label>
         <textarea [(ngModel)]="wordlist" cdkAutosizeMaxRows="20" cdkTextareaAutosize matInput></textarea>
-        <button class="scan" matSuffix mat-icon-button><mat-icon>photo_library</mat-icon></button>
+        <button class="scan" matSuffix mat-icon-button
+            (click)="openBottomSheet();"><mat-icon>photo_library</mat-icon></button>
     </mat-form-field>
 
     <div fxLayout="row" fxLayoutGap="10px">
