@@ -1,3 +1,4 @@
+<!--TODO:筛选-->
 <input style="display: none;" #camera type="file" capture="camera" accept="image/*" (change)="fileChangeEvent($event)">
 <input style="display: none;" #file type="file" (change)="fileChangeEvent($event)" />
 <mat-stepper (selectionChange)="changed($event);">
@@ -20,8 +21,14 @@
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>预览</ng-template>
-        <img width="200px" [src]="croppedImage1" />
-        <img width="200px" [src]="croppedImage2" />
+        <button mat-raised-button (click)="showInterImages=!showInterImages;">{{!showInterImages? '显示':'隐藏'}}</button>
+        <div [hidden]="!showInterImages">
+            <img #croppedImage1Img [src]="croppedImage1" />
+            <img #croppedImage2Img [src]="croppedImage2" />
+            <canvas #cleanedImage1></canvas>
+            <canvas #cleanedImage2></canvas>
+        </div>
+
         <button mat-button matStepperPrevious>上一步</button>
     </mat-step>
 </mat-stepper>

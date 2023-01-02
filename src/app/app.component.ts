@@ -30,9 +30,9 @@ export class AppComponent implements AfterViewInit {
     private bs: BookShelfService) {
     this.lastOn.subscribe(() => {
       this.vv *= -1;
-
     });
   }
+
 
   // TODO：直接让动画重播
   vv: number = 1;
@@ -225,6 +225,7 @@ export class AppComponent implements AfterViewInit {
 
     return array;
   }
+
 
 
 }
