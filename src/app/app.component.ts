@@ -47,6 +47,7 @@ export class AppComponent implements AfterViewInit {
     this.bs.currentBookChanged.subscribe(x => {
       this.deck = [...x.book];
       this.cursor = 0;
+      console.log(this.deck);
       this.start();
     });
   }

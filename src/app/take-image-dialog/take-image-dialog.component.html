@@ -5,22 +5,37 @@
     <mat-step [stepControl]="firstFormGroup">
         <ng-template matStepLabel>选取单词</ng-template>
 
+        <p>请选择单词语言，并框选单词区域</p>
+        <p>请保证纸张平整，干净无污渍，字迹清晰，拍摄无阴影无反光</p>
+
+        <app-select-language #lang1></app-select-language>
+
         <image-cropper [imageChangedEvent]="imageChangedEvent" format="png" [allowMoveImage]="true"
             [maintainAspectRatio]="false" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded($event)"
             (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+        <button mat-button matDialogClose>关闭</button>
         <button mat-button matStepperNext>下一步</button>
     </mat-step>
     <mat-step [stepControl]="secondFormGroup">
         <ng-template matStepLabel>选取释义</ng-template>
+
+        <app-select-language #lang2></app-select-language>
+        <p>请选择释义语言，并框选释义区域</p>
+
         <image-cropper [imageChangedEvent]="imageChangedEventForCropper2" format="png" [allowMoveImage]="true"
             [maintainAspectRatio]="false" (imageCropped)="imageCropped2($event)" (imageLoaded)="imageLoaded($event)"
             (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
 
+        <button mat-button matDialogClose>关闭</button>
         <button mat-button matStepperPrevious>上一步</button>
         <button mat-button matStepperNext>下一步</button>
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>预览</ng-template>
+
+        <p>请检查识别情况，并根据需要修改有误的地方，然后点击确认</p>
+        <p>如果识别结果完全不可用，可尝试重新拍摄</p>
+
         <button mat-raised-button (click)="showInterImages=!showInterImages;">{{!showInterImages? '显示':'隐藏'}}</button>
         <div [hidden]="!showInterImages">
             <img #croppedImage1Img [src]="croppedImage1" />
@@ -29,6 +44,25 @@
             <canvas #cleanedImage2></canvas>
         </div>
 
+        <p [hidden]="done">正在识别中，请稍后...</p>
+        <p [hidden]="!done||wordList.length>0">很抱歉！未识别到任何内容:(</p>
+        <div>
+            <mat-list role="list">
+                <mat-list-item *ngFor="let word of wordList" role="listitem">
+                    <div fxLayout="row" fxLayoutGap="10px">
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="word.from">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="word.to">
+                        </mat-form-field>
+                    </div>
+                </mat-list-item>
+            </mat-list>
+        </div>
+
+        <button mat-button matDialogClose>关闭</button>
         <button mat-button matStepperPrevious>上一步</button>
+        <button mat-button [matDialogClose]="wordList">确认</button>
     </mat-step>
 </mat-stepper>

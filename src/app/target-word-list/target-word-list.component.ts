@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { MatBottomSheet, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BookShelfService, parseRaw } from '../book-shelf.service';
+import { BookShelfService, parseRaw, Word } from '../book-shelf.service';
 import { TakeImageDialogComponent } from '../take-image-dialog/take-image-dialog.component';
 
 
@@ -27,26 +27,30 @@ export class BottomSheetOverviewExampleSheet {
     private dialog: MatDialog) { }
 
   fromCamera(event: MouseEvent): void {
-    this._bottomSheetRef.dismiss();
     event.preventDefault();
-    this.dialog.open(TakeImageDialogComponent,
+    let dialogRef = this.dialog.open(TakeImageDialogComponent,
       {
         data: 'camera',
         panelClass: 'fullscreen-dialog'
       }
     );
+    dialogRef.afterClosed().subscribe((result) => {
+      this._bottomSheetRef.dismiss(result);
+    });
   }
 
 
   fromGallery(event: MouseEvent): void {
-    this._bottomSheetRef.dismiss();
     event.preventDefault();
-    this.dialog.open(TakeImageDialogComponent,
+    let dialogRef = this.dialog.open(TakeImageDialogComponent,
       {
         data: 'file',
         panelClass: 'fullscreen-dialog'
       }
     );
+    dialogRef.afterClosed().subscribe((result) => {
+      this._bottomSheetRef.dismiss(result);
+    });
   }
 }
 
@@ -117,7 +121,17 @@ export class TargetWordListComponent {
 
 
   openBottomSheet(): void {
-    this._bottomSheet.open(BottomSheetOverviewExampleSheet);
+    let ref = this._bottomSheet.open(BottomSheetOverviewExampleSheet);
+    ref.afterDismissed().subscribe((result: Word[]) => {
+      console.log(result);
+      if (result) {
+        let tmp = '';
+        for (let w of result) {
+          tmp += `${w.from}|${w.to}\n`;
+        }
+        this.wordlist = tmp;
+      }
+    });
   }
 
   protected wordlist: string = "";

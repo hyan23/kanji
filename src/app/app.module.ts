@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -24,10 +25,13 @@ import { BookViewDialogComponent } from './book-view-dialog/book-view-dialog.com
 import { ForgotWordListComponent } from './forgot-word-list/forgot-word-list.component';
 import { MakeConfirmComponent } from './make-confirm/make-confirm.component';
 import { ScratchCardComponent } from './scratch-card/scratch-card.component';
+import { SelectLanguageComponent } from './select-language/select-language.component';
 import { TakeImageDialogComponent } from './take-image-dialog/take-image-dialog.component';
 import { BookNameDialogComponent, BottomSheetOverviewExampleSheet, TargetWordListComponent } from './target-word-list/target-word-list.component';
 import { WordBookListComponent } from './word-book-list/word-book-list.component';
 import { WordCardComponent } from './word-card/word-card.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,6 +45,7 @@ import { WordCardComponent } from './word-card/word-card.component';
     BookViewDialogComponent,
     BottomSheetOverviewExampleSheet,
     TakeImageDialogComponent,
+    SelectLanguageComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,6 +68,7 @@ import { WordCardComponent } from './word-card/word-card.component';
     MatBottomSheetModule,
     MatStepperModule,
     ReactiveFormsModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

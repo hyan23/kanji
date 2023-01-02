@@ -36,7 +36,7 @@ export function parseRaw(raw: string): Word[] {
   let list: Word[] = [];
   let lines = raw.split(/\r?\n/g);
   lines.forEach((value) => {
-    let sp = value.split(/\s+/).map(x => x.trim());
+    let sp = value.split(/\|/).map(x => x.trim());
     if (sp.length == 2 && sp[0].length > 0 && sp[1].length > 0) {
       let left = sp[0].split(/、|、/g).map(x => x.trim()).filter(x => x.length > 0);
       let right = sp[1].split(/、|、/g).map(x => x.trim()).filter(x => x.length > 0);
