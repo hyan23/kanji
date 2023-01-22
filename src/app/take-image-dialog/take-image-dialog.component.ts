@@ -2,7 +2,7 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import * as cv from "@techstark/opencv-js";
+// import * as cv from "@techstark/opencv-js";
 import { ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 import { Word } from '../book-shelf.service';
 import { SelectLanguageComponent } from '../select-language/select-language.component';
@@ -12,32 +12,32 @@ declare global {
 }
 
 function cleanImage(src: HTMLElement, dest: HTMLElement) {
-  let original = cv.imread(src);
-  let gray = cv.Mat.zeros(original.rows, original.cols, original.type());
-  let binary = cv.Mat.zeros(original.rows, original.cols, original.type());
-  let hlines = cv.Mat.zeros(original.rows, original.cols, original.type());
-  let vlines = cv.Mat.zeros(original.rows, original.cols, original.type());
-  let result = cv.Mat.zeros(original.rows, original.cols, original.type());
+  // let original = cv.imread(src);
+  // let gray = cv.Mat.zeros(original.rows, original.cols, original.type());
+  // let binary = cv.Mat.zeros(original.rows, original.cols, original.type());
+  // let hlines = cv.Mat.zeros(original.rows, original.cols, original.type());
+  // let vlines = cv.Mat.zeros(original.rows, original.cols, original.type());
+  // let result = cv.Mat.zeros(original.rows, original.cols, original.type());
 
-  cv.cvtColor(original, gray, cv.COLOR_BGR2GRAY);
-  // TODO:adaptiveThreshold?
-  cv.threshold(gray, binary, 50, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU)
-  let kernel1 = cv.getStructuringElement(cv.MORPH_RECT, { width: 50, height: 1 });
-  //TODO:iteration
-  cv.morphologyEx(binary, hlines, cv.MORPH_OPEN, kernel1);
-  // cv.threshold(hlines, hlines, 0, 255, cv.THRESH_BINARY);
-  let k = cv.getStructuringElement(cv.MORPH_RECT, { width: 5, height: 5 });
-  cv.dilate(hlines, hlines, k);
+  // cv.cvtColor(original, gray, cv.COLOR_BGR2GRAY);
+  // // TODO:adaptiveThreshold?
+  // cv.threshold(gray, binary, 50, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU)
+  // let kernel1 = cv.getStructuringElement(cv.MORPH_RECT, { width: 50, height: 1 });
+  // //TODO:iteration
+  // cv.morphologyEx(binary, hlines, cv.MORPH_OPEN, kernel1);
+  // // cv.threshold(hlines, hlines, 0, 255, cv.THRESH_BINARY);
+  // let k = cv.getStructuringElement(cv.MORPH_RECT, { width: 5, height: 5 });
+  // cv.dilate(hlines, hlines, k);
 
-  let kernel2 = cv.getStructuringElement(cv.MORPH_RECT, { width: 1, height: 50 });
-  cv.morphologyEx(binary, vlines, cv.MORPH_OPEN, kernel2);
-  // cv.threshold(vlines, vlines, 0, 255, cv.THRESH_BINARY);
-  cv.dilate(vlines, vlines, k);
+  // let kernel2 = cv.getStructuringElement(cv.MORPH_RECT, { width: 1, height: 50 });
+  // cv.morphologyEx(binary, vlines, cv.MORPH_OPEN, kernel2);
+  // // cv.threshold(vlines, vlines, 0, 255, cv.THRESH_BINARY);
+  // cv.dilate(vlines, vlines, k);
 
-  cv.threshold(gray, result, 180, 255, cv.THRESH_BINARY);
-  cv.add(result, hlines, result);
-  cv.add(result, vlines, result);
-  cv.imshow(dest, result);
+  // cv.threshold(gray, result, 180, 255, cv.THRESH_BINARY);
+  // cv.add(result, hlines, result);
+  // cv.add(result, vlines, result);
+  // cv.imshow(dest, result);
   // cv.imshow(d, new cv.Mat(dest.rows, dest.cols, dest.type(), [50, 50, 50, 50]));
 }
 

@@ -9,7 +9,7 @@ import { ConfirmData, MakeConfirmComponent } from './make-confirm/make-confirm.c
 import { ScratchCardComponent } from './scratch-card/scratch-card.component';
 import { TargetWordListComponent } from './target-word-list/target-word-list.component';
 
-
+import * as googleTTS from 'google-tts-api'; // ES6 or TypeScript
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -128,8 +128,51 @@ export class AppComponent implements AfterViewInit {
     setTimeout(() => { this.speak(this.currentWord) }, 100);
   }
 
+  /*
+  // server code
+  
+  
+  var http = require('http'),
+    httpProxy = require('http-proxy');
 
+// TODO: cache audio
+var proxy = httpProxy.createProxyServer({});
+
+var server = http.createServer(function (req, res) {
+    req.headers.host = "translate.google.com";
+    if (req.headers.referer) {
+        req.headers.referer = 'http://translate.google.com' + req.url;
+    }
+    delete req.headers['x-playback-session-id'];
+    // delete req.headers['upgrade-insecure-requests'];
+    console.log(req.headers);
+    proxy.web(req, res, { target: 'http://translate.google.com:80' });
+    // TODO: 'access-control-allow-origin' = '*';
+    // console.log(res);
+});
+
+console.log("listening on port 8081")
+server.listen(8081, '0.0.0.0');
+
+  
+  
+  */
+  audio: any;
+  server = '192.168.43.24:8081';
   speak(word: string) {
+    let host = `http://${this.server}`;
+    //https://cloud.google.com/speech/docs/languages
+    let u = googleTTS.getAudioUrl(word, {
+      lang: 'ja-JP',
+      slow: false,
+      host: host,
+    });
+    console.log(u);
+    // alert(u);
+    this.audio = new Audio(u);
+    this.audio.play();//.finally((result: any) => { alert(result); });
+    // alert('polay');
+    return;
 
     if ('speechSynthesis' in window) {
       var synthesis = window.speechSynthesis;
@@ -168,6 +211,8 @@ export class AppComponent implements AfterViewInit {
   dontknow() {
     if (this.group2.value === 'deathmatch') {
       this.deck.push({ from: this.currentWord, to: this.currentPron, id: `${Math.random()}` });
+      this.forgot.append(this.currentWord, this.currentPron);
+      this.next();
     } else {
 
       this._snackbar.open('已添加', 'OK', { duration: 1000 });
